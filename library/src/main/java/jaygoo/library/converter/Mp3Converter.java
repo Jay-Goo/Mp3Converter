@@ -40,12 +40,12 @@ public class Mp3Converter {
     /**
      * file convert to mp3
      * it may cost a lot of time and better put it in a thread
-     * @param input
+     * @param inputPath
      *          file path to be converted
-     * @param mp3
+     * @param mp3Path
      *          mp3 output file path
      */
-    public native  static void convertMp3(String input, String mp3);
+    public native  static void convertMp3(String inputPath, String mp3Path);
 
 
     /**

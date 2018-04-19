@@ -1,7 +1,5 @@
 #include"stdio.h"
 #include"jni.h"
-#include"malloc.h"
-#include"string.h"
 #include"lamemp3/lame.h"
 #include"android/log.h"
 #define LOG_TAG "lameUtils"
@@ -47,9 +45,9 @@ Java_jaygoo_library_converter_Mp3Converter_init(JNIEnv *env, jclass type, jint i
 
 extern "C" JNIEXPORT
 void JNICALL Java_jaygoo_library_converter_Mp3Converter_convertMp3
-		(JNIEnv * env, jobject obj, jstring jInput, jstring jMp3) {
-    const char* cInput = env->GetStringUTFChars(jInput, 0);
-    const char* cMp3 = env->GetStringUTFChars(jMp3, 0);
+		(JNIEnv * env, jobject obj, jstring jInputPath, jstring jMp3Path) {
+    const char* cInput = env->GetStringUTFChars(jInputPath, 0);
+    const char* cMp3 = env->GetStringUTFChars(jMp3Path, 0);
     //open input file and output file
     FILE* fInput = fopen(cInput,"rb");
     FILE* fMp3 = fopen(cMp3,"wb");
@@ -66,7 +64,7 @@ void JNICALL Java_jaygoo_library_converter_Mp3Converter_convertMp3
 
     //convert to mp3
     do{
-        read = static_cast<int>(fread(inputBuffer, sizeof(short int) * 2, 8192, fInput));
+        read = static_cast<int>(fread(inputBuffer, sizeof(short int) * 2, BUFFER_SIZE, fInput));
         total +=  read * sizeof(short int)*2;
         nowConvertBytes = total;
         if(read != 0){
@@ -84,8 +82,8 @@ void JNICALL Java_jaygoo_library_converter_Mp3Converter_convertMp3
     resetLame();
     fclose(fInput);
     fclose(fMp3);
-    env->ReleaseStringUTFChars(jInput, cInput);
-    env->ReleaseStringUTFChars(jMp3, cMp3);
+    env->ReleaseStringUTFChars(jInputPath, cInput);
+    env->ReleaseStringUTFChars(jMp3Path, cMp3);
     nowConvertBytes = -1;
 }
 
