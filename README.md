@@ -13,7 +13,7 @@ allprojects {
 	}
 //Module build.gradle
 dependencies {
-	        implementation 'com.github.Jay-Goo:Mp3Converter:v0.0.1'
+	        implementation 'com.github.Jay-Goo:Mp3Converter:v0.0.2'
 	}
 ```
 ## Methods
@@ -66,7 +66,7 @@ You can use Android Studio `Make Module 'library'`to create your *.so files, the
 This library support `armeabi-v7a`, `arm64-v8a`, `mips`, `mips64`, `x86`, `x86_64`
 
 # Blog
-You can learn how to build this library through this article.
+You can learn how to build this library through [this article](https://github.com/Jay-Goo/Mp3Converter/blob/master/blog.md).
 
 # License
 MIT License
