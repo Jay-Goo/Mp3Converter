@@ -42,8 +42,8 @@ dependencies {
 
  /**
      * file convert to mp3
-     * it may cost a lot of time and better put it in a thread
-     * @param input
+     * it may cost a lot of time and better put it in a thread
+     * @param input
      *          file path to be converted
      * @param mp3
      *          mp3 output file path
@@ -68,6 +68,6 @@ This library support `armeabi-v7a`, `arm64-v8a`, `mips`, `mips64`, `x86`, `x86_6
 # Blog
 You can learn how to build this library through this article.
 
-#License
+# License
 MIT License
 Copyright (c) 2018 Jay-Goo
