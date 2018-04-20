@@ -69,7 +69,7 @@ This library support `armeabi-v7a`, `arm64-v8a`, `mips`, `mips64`, `x86`, `x86_6
 You can learn how to build this library through [this article](https://github.com/Jay-Goo/Mp3Converter/blob/master/blog.md).
 
 # Future
-support more formats
+Support amr format
 
 # License
 MIT License
