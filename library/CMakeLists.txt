@@ -6,19 +6,19 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 #define cpp source path
-set(SRC_DIR main/cpp/lamemp3)
+set(SRC_DIR src/main/cpp/lamemp3)
 
-##set *.h source path
-include_directories(main/cpp/lamemp3)
+#set *.h source path
+include_directories(src/main/cpp/lamemp3)
 
 #set cpp source path
-aux_source_directory(main/cpp/lamemp3 SRC_LIST)
+aux_source_directory(src/main/cpp/lamemp3 SRC_LIST)
 
 #set *.so files output path，please add this before add_library
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/jniLibs/${ANDROID_ABI})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI})
 
 #add cpp files into library
-add_library(lame-mp3-utils SHARED main/cpp/lame-mp3-utils.cpp ${SRC_LIST})
+add_library(lame-mp3-utils SHARED src/main/cpp/lame-mp3-utils.cpp ${SRC_LIST})
 
 find_library( # Sets the name of the path variable.
               log-lib
