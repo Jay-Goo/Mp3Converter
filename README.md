@@ -66,7 +66,7 @@ You can use Android Studio `Make Module 'library'`to create your *.so files, the
 This library support `armeabi-v7a`, `arm64-v8a`, `mips`, `mips64`, `x86`, `x86_64`
 
 # Blog
-You can learn how to build this library through [this article](https://github.com/Jay-Goo/Mp3Converter/blob/master/blog.md).
+You can learn how to build this library through [this article](https://gujinjie.top/2018/04/19/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0Android%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8NDK%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAMP3%E8%BD%AC%E7%A0%81%E5%BA%93/).
 
 # Future
 Support amr format
