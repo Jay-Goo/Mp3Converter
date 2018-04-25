@@ -13,7 +13,7 @@ allprojects {
 	}
 //Module build.gradle
 dependencies {
-	        implementation 'com.github.Jay-Goo:Mp3Converter:v0.0.2'
+	        implementation 'com.github.Jay-Goo:Mp3Converter:v0.0.3'
 	}
 ```
 ## Methods
