@@ -26,7 +26,7 @@ android {
                 //设置cpp配置参数，c文件请使用CFlags
                 cppFlags ""
                 //设置生成指定ABI版本的so库
-                abiFilters 'armeabi-v7a','arm64-v8a','armeabi','mips','mips64','x86','x86_64'
+                abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'//,'armeabi','mips','mips64'
             }
         }
     }
