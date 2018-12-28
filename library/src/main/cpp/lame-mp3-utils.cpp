@@ -1,3 +1,4 @@
+#include <string.h>
 #include"stdio.h"
 #include"jni.h"
 #include"lamemp3/lame.h"
@@ -14,6 +15,21 @@ void resetLame() {
         lame_close(lame);
         lame = NULL;
     }
+}
+
+
+unsigned char* convertJByteArrayToChars(JNIEnv *env, jbyteArray bytearray)
+{
+    unsigned char *chars = NULL;
+    jbyte *bytes;
+    bytes = env->GetByteArrayElements(bytearray, 0);
+    int chars_len = env->GetArrayLength(bytearray);
+    chars = new unsigned char[chars_len + 1];
+    memset(chars,0,chars_len + 1);
+    memcpy(chars, bytes, chars_len);
+    chars[chars_len] = 0;
+    env->ReleaseByteArrayElements(bytearray, bytes, 0);
+    return chars;
 }
 
 void lameInit(jint inSampleRate,
@@ -86,6 +102,47 @@ void JNICALL Java_jaygoo_library_converter_Mp3Converter_convertMp3
     env->ReleaseStringUTFChars(jMp3Path, cMp3);
     nowConvertBytes = -1;
 }
+
+extern "C" JNIEXPORT int JNICALL
+Java_jaygoo_library_converter_Mp3Converter__encode(
+    JNIEnv * env, jclass cls, jshortArray buffer_l, jshortArray buffer_r,
+    jint samples, jbyteArray mp3buf) {
+    jshort* j_buffer_l = env->GetShortArrayElements(buffer_l, NULL);
+
+    jshort* j_buffer_r = env->GetShortArrayElements(buffer_r, NULL);
+
+    const jsize mp3buf_size = env->GetArrayLength(mp3buf);
+    unsigned char * c_mp3buf = convertJByteArrayToChars(env, mp3buf);
+    int result = lame_encode_buffer(lame, j_buffer_l, j_buffer_r,
+                                    samples, c_mp3buf, mp3buf_size);
+
+    env-> ReleaseShortArrayElements(buffer_l, j_buffer_l, 0);
+    env->ReleaseShortArrayElements(buffer_r, j_buffer_r, 0);
+    *c_mp3buf = NULL;
+    return result;
+}
+
+
+
+extern "C" JNIEXPORT int JNICALL
+Java_jaygoo_library_converter_Mp3Converter__flush(
+    JNIEnv *env, jclass cls, jbyteArray mp3buf) {
+    const jsize mp3buf_size = env->GetArrayLength(mp3buf);
+    unsigned char * c_mp3buf = convertJByteArrayToChars(env, mp3buf);
+
+    int result = lame_encode_flush(lame, c_mp3buf, mp3buf_size);
+
+    *c_mp3buf = NULL;
+    return result;
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_jaygoo_library_converter_Mp3Converter_close
+    (JNIEnv *env, jclass cls) {
+    lame_close(lame);
+    lame = NULL;
+}
+
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_jaygoo_library_converter_Mp3Converter_getLameVersion(
