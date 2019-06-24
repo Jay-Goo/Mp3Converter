@@ -1,0 +1,4 @@
+//Library
+include ':LameMP3'
+project(":LameMP3").projectDir = file("./LameMP3/CMake")
+

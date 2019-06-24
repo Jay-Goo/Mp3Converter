@@ -1,0 +1,54 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "29.0.0"
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+                abiFilters "armeabi-v7a", "x86", "x86_64", "arm64-v8a"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+
+    packagingOptions {
+        pickFirst 'lib/armeabi-v7a/libmp3lame.so'
+        pickFirst 'lib/arm64-v8a/libmp3lame.so'
+        pickFirst 'lib/armeabi/libmp3lame.so'
+        pickFirst 'lib/x86/libmp3lame.so'
+        pickFirst 'lib/mips/libmp3lame.so'
+        pickFirst 'lib/mips64/libmp3lame.so'
+        pickFirst 'lib/x86_64/libmp3lame.so'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+// Ref :https://stackoverflow.com/questions/39613452/copy-shared-objects-to-jnilibs-when-using-cmake-for-android
+task copySoTojniLibs(type: Copy, dependsOn: 'bundleDebug') {
+    from ('.externalNativeBuild/cmake/debug/libs') {
+        include '**/*.so'
+    }
+    into 'src/main/jniLibs'
+}
