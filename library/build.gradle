@@ -56,12 +56,13 @@ android {
         pickFirst 'lib/mips64/liblame-mp3-utils.so'
         pickFirst 'lib/x86_64/liblame-mp3-utils.so'
     }
-
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
+    //Simulate submodue -- lame library
+    implementation project(path: ':lamemp3')
 }
 
 
