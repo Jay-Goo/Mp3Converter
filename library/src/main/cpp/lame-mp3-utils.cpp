@@ -11,6 +11,17 @@
 static lame_global_flags *lame = NULL;
 long nowConvertBytes = 0;
 
+struct lame_config {
+    int inSampleRate = 44100;
+    int channel = 2;
+    int mode = 0;
+    int outSampleRate = 44100;
+    int outBitRate = 96;
+    int quality = 7;
+};
+
+lame_config default_lame_config;
+
 void resetLame() {
     if (lame != NULL) {
         lame_close(lame);
@@ -36,6 +47,14 @@ void lameInit(jint inSampleRate,
               jint channel, jint mode, jint outSampleRate,
               jint outBitRate, jint quality) {
     resetLame();
+    //记录参数
+    default_lame_config.inSampleRate = inSampleRate;
+    default_lame_config.channel = channel;
+    default_lame_config.mode = mode;
+    default_lame_config.outSampleRate = outSampleRate;
+    default_lame_config.outBitRate = outBitRate;
+    default_lame_config.quality = quality;
+
     lame = lame_init();
     lame_set_in_samplerate(lame, inSampleRate);
     lame_set_num_channels(lame, channel);
@@ -59,7 +78,6 @@ Java_jaygoo_library_converter_Mp3Converter_init(JNIEnv *env, jclass type, jint i
     lameInit(inSampleRate, channel, mode, outSampleRate, outBitRate, quality);
 }
 
-//https://stackoverflow.com/questions/16926725/audio-speed-changes-on-converting-wav-to-mp3
 extern "C" JNIEXPORT
 void JNICALL Java_jaygoo_library_converter_Mp3Converter_convertMp3
         (JNIEnv *env, jclass obj, jstring jInputPath, jstring jMp3Path) {
@@ -76,7 +94,14 @@ void JNICALL Java_jaygoo_library_converter_Mp3Converter_convertMp3
     nowConvertBytes = 0;
     //if you don't init lame, it will init lame use the default value
     if (lame == NULL) {
-        lameInit(44100, 2, 0, 44100, 96, 7);
+        lameInit(
+                default_lame_config.inSampleRate,
+                default_lame_config.channel,
+                default_lame_config.mode,
+                default_lame_config.outSampleRate,
+                default_lame_config.outBitRate,
+                default_lame_config.quality
+        );
     }
     int channel_num = lame_get_num_channels(lame);
     //convert to mp3
@@ -90,15 +115,16 @@ void JNICALL Java_jaygoo_library_converter_Mp3Converter_convertMp3
             read = static_cast<int>(fread(inputBuffer, sizeof(short int) * 2, BUFFER_SIZE, fInput));
             total += read * sizeof(short int) * 2;
         }
-
         nowConvertBytes = total;
         if (read != 0) {
             if (channel_num == 1) {
                 //单声道
-                write = lame_encode_buffer(lame, inputBuffer, NULL, read, mp3Buffer, BUFFER_SIZE);
+                write = lame_encode_buffer(lame, inputBuffer, NULL, read, mp3Buffer,
+                                           BUFFER_SIZE);
             } else {
                 //双声道
-                write = lame_encode_buffer_interleaved(lame, inputBuffer, read, mp3Buffer, BUFFER_SIZE);
+                write = lame_encode_buffer_interleaved(lame, inputBuffer, read, mp3Buffer,
+                                                       BUFFER_SIZE);
             }
             //write the converted buffer to the file
             fwrite(mp3Buffer, sizeof(unsigned char), static_cast<size_t>(write), fMp3);
@@ -152,16 +178,13 @@ Java_jaygoo_library_converter_Mp3Converter__flush(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_jaygoo_library_converter_Mp3Converter_close
-        (JNIEnv *env, jclass cls) {
-    lame_close(lame);
-    lame = NULL;
+Java_jaygoo_library_converter_Mp3Converter_close(JNIEnv *env, jclass cls) {
+    resetLame();
 }
 
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_jaygoo_library_converter_Mp3Converter_getLameVersion(
-        JNIEnv *env, jobject /* this */) {
+Java_jaygoo_library_converter_Mp3Converter_getLameVersion(JNIEnv *env, jobject /* this */) {
     return env->NewStringUTF(get_lame_version());
 }
 
