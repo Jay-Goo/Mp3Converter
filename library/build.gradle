@@ -11,14 +11,21 @@ buildscript {
 apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.Jay-Goo'
 
+
+//名称
+static def getModuleName() {
+    return "Mp3Converter"
+}
+
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 28
+        versionCode 10000
+        versionName "1.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -56,12 +63,16 @@ android {
         pickFirst 'lib/mips64/liblame-mp3-utils.so'
         pickFirst 'lib/x86_64/liblame-mp3-utils.so'
     }
-
+    //自动重命名AAR
+    android.libraryVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${getModuleName()}-${defaultConfig.versionName}.aar"
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
 }
 
 
